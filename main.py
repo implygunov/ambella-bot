@@ -882,12 +882,31 @@ class OyuzBot:
     async def run(self):
         await self.db.init()
         os.makedirs("files", exist_ok=True)
+        try:
+            await start_dummy_healthcheck_server()
+        except Exception as e:
+            print(f"⚠️ Healthcheck server warning: {e}")
         print(f"✅ {PRODUCT_NAME} bot started (PostgreSQL)")
         await self.dp.start_polling(self.bot)
 
     async def shutdown(self):
         await self.crypto.close()
         await self.db.close()
+
+
+from aiohttp import web
+
+async def start_dummy_healthcheck_server():
+    """Dummy web server so Render Free Web Service stays healthy and 100% FREE."""
+    port = int(os.getenv("PORT", 8080))
+    app = web.Application()
+    app.router.add_get("/", lambda r: web.Response(text="Bot is running!"))
+    app.router.add_get("/health", lambda r: web.Response(text="OK"))
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, "0.0.0.0", port)
+    await site.start()
+    print(f"🌐 Free Web Service healthcheck listening on port {port}")
 
 
 async def main():
