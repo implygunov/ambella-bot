@@ -63,15 +63,17 @@ def generate_login(length=8):
     chars = string.ascii_lowercase + string.digits
     return "oyuz_" + ''.join(secrets.choice(chars) for _ in range(length))
 
-from passlib.context import CryptContext
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+import bcrypt
 
 def generate_password(length=12):
     chars = string.ascii_letters + string.digits + "!@#$"
     return ''.join(secrets.choice(chars) for _ in range(length))
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    # Truncate password to 72 bytes due to bcrypt specification limits
+    pw_bytes = password.encode('utf-8')[:72]
+    salt = bcrypt.gensalt()
+    return bcrypt.hashpw(pw_bytes, salt).decode('utf-8')
 
 def generate_subscription_key(length=20):
     chars = string.ascii_lowercase + string.digits
