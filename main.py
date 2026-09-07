@@ -25,17 +25,12 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 
 # ======================== CONFIG ========================
 
-BOT_TOKEN        = os.getenv("BOT_TOKEN")
-CRYPTO_PAY_API_KEY = os.getenv("CRYPTO_PAY_API_KEY")
-ADMIN_ID         = int(os.getenv("ADMIN_ID", "0"))
-DATABASE_URL     = os.getenv("DATABASE_URL")
+BOT_TOKEN        = os.getenv("BOT_TOKEN", "8897980437:AAH6LAvjq4H_t8amJKJ7pholkg6WTHgKgxU")
+CRYPTO_PAY_API_KEY = os.getenv("CRYPTO_PAY_API_KEY", "631099:AAc8WyW8iQpFepMncLt77HDLg1eGJXcWWNJ")
+ADMIN_ID         = int(os.getenv("ADMIN_ID", "7541535601"))
+DATABASE_URL     = os.getenv("DATABASE_URL", "postgresql://ambella:EwpDbvPjd6DxO7ZDoEiVCpFeJkBFnJ73@dpg-daemrson74is73eij1c0-a.ohio-postgres.render.com/ambella")
 BACKEND_URL      = os.getenv("BACKEND_URL", "https://ambella-backend.onrender.com")
-ADMIN_KEY        = os.getenv("ADMIN_KEY")
-
-if not BOT_TOKEN:
-    raise RuntimeError("BOT_TOKEN is not set! Please define it in bot/.env.")
-if not DATABASE_URL:
-    raise RuntimeError("DATABASE_URL is not set! Please define it in bot/.env.")
+ADMIN_KEY        = os.getenv("ADMIN_KEY", "21e8fbb91e54818f1d05c59a9bda22d8")
 
 PRODUCT_NAME = "Ambella"
 LOADER_FILE_PATH = "files/loader.exe"
