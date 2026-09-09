@@ -496,8 +496,31 @@ class OyuzBot:
             await m.answer("❌ Пароль слишком короткий. Минимум 6 символов:")
             return
         data = await state.get_data()
-        login = data["login"]
         pw_hash = hash_password(password)
+
+        if data.get("change_pass"):
+            acc = await self.db.get_account_by_user_id(m.from_user.id)
+            if not acc:
+                await state.clear()
+                await m.answer("❌ Аккаунт не найден. Сначала зарегистрируйся.", reply_markup=self._main_kb(False))
+                return
+            await self.db.change_password(acc["id"], pw_hash)
+            await state.clear()
+            await m.answer(
+                f"✅ <b>Пароль успешно изменён!</b>\n\n"
+                f"👤 Логин: <code>{acc['login']}</code>\n"
+                f"🔒 Новый пароль: <code>{password}</code>\n\n"
+                f"💾 Используй эти данные для входа в лоадер.",
+                parse_mode="HTML", reply_markup=self._main_kb(True)
+            )
+            return
+
+        login = data.get("login")
+        if not login:
+            await state.clear()
+            await m.answer("❌ Ошибка: логин не указан. Начни регистрацию заново: /register", reply_markup=self._main_kb(False))
+            return
+
         await self.db.create_account(m.from_user.id, login, pw_hash)
         await state.clear()
         await m.answer(
